@@ -59,9 +59,9 @@ func extractFilesContentToAnotherDirectory(files []fs.FileInfo) (result bool) {
 			if TAG_EXTRACT_OPEN == "<svg" {
 				const FILL, WIDTH, HEIGHT, PROPS = "fill={color}", "width={size}", "height={size}", "{...props}"
 				const FILL_REPLACE, WIDTH_REPLACE, HEIGHT_REPLACE = "fill='currentColor'", "width='73'", "height='44'"
-				contentStr = strings.Replace(contentStr, FILL, FILL_REPLACE, 1)
-				contentStr = strings.Replace(contentStr, WIDTH, WIDTH_REPLACE, 1)
-				contentStr = strings.Replace(contentStr, HEIGHT, HEIGHT_REPLACE, 1)
+				contentStr = strings.Replace(contentStr, FILL, FILL_REPLACE, -1)
+				contentStr = strings.Replace(contentStr, WIDTH, WIDTH_REPLACE, -1)
+				contentStr = strings.Replace(contentStr, HEIGHT, HEIGHT_REPLACE, -1)
 				contentStr = strings.Replace(contentStr, PROPS, "", 1)
 			}
 
