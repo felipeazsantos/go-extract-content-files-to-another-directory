@@ -62,7 +62,7 @@ func extractFilesContentToAnotherDirectory(files []fs.FileInfo) (result bool) {
 				contentStr = strings.Replace(contentStr, FILL, FILL_REPLACE, -1)
 				contentStr = strings.Replace(contentStr, WIDTH, WIDTH_REPLACE, -1)
 				contentStr = strings.Replace(contentStr, HEIGHT, HEIGHT_REPLACE, -1)
-				contentStr = strings.Replace(contentStr, PROPS, "", 1)
+				contentStr = strings.Replace(contentStr, PROPS, "", -1)
 			}
 
 			chanDestDir := make(chan bool)
@@ -91,7 +91,7 @@ func writeToDestDir(content, filename string, chanDestDir chan bool) {
 
 	// create the destination file
 	newFileName := strings.Split(filename, ".")[0] + NEW_FILE_SAVE_EXTENSION
-	destinationFile, err := os.Create(DEST_DIR + "/" + newFileName)
+	destinationFile, err := os.Create(filepath.Join(DEST_DIR, newFileName))
 	if err != nil {
 		log.Printf("Error to create the destination file %s, error: %s \n", newFileName, err.Error())
 		chanDestDir <- false
