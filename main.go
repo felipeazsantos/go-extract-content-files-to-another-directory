@@ -9,6 +9,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"unicode"
 )
 
 const TAG_EXTRACT_OPEN = "<svg"
@@ -58,7 +59,7 @@ func extractFilesContentToAnotherDirectory(files []fs.FileInfo) (result bool) {
 			// svg files from react lib
 			if TAG_EXTRACT_OPEN == "<svg" {
 				const FILL, WIDTH, HEIGHT, PROPS = "fill={color}", "width={size}", "height={size}", "{...props}"
-				const FILL_REPLACE, WIDTH_REPLACE, HEIGHT_REPLACE = "fill='currentColor'", "width='73'", "height='44'"
+				const FILL_REPLACE, WIDTH_REPLACE, HEIGHT_REPLACE = "fill='green'", "width='24'", "height='24'"
 				contentStr = strings.Replace(contentStr, FILL, FILL_REPLACE, -1)
 				contentStr = strings.Replace(contentStr, WIDTH, WIDTH_REPLACE, -1)
 				contentStr = strings.Replace(contentStr, HEIGHT, HEIGHT_REPLACE, -1)
@@ -66,7 +67,8 @@ func extractFilesContentToAnotherDirectory(files []fs.FileInfo) (result bool) {
 			}
 
 			chanDestDir := make(chan bool)
-			go writeToDestDir(contentStr, file.Name(), chanDestDir)
+			iconName := strings.ReplaceAll(capitalizeWords(file.Name()), "-", "")
+			go writeToDestDir(contentStr, iconName, chanDestDir)
 			createDirStatus := <-chanDestDir
 
 			// if has an error to create destination directory, break the program
@@ -108,4 +110,17 @@ func writeToDestDir(content, filename string, chanDestDir chan bool) {
 	}
 
 	chanDestDir <- true
+}
+
+func capitalizeWords(input string) string {
+	words := strings.Split(input, "-") // Split strings into words
+	var capitalizedWords []string
+	
+	for _, word := range words {
+		// Convert the first letter to uppercase and the rest to lowercase
+		capitalized := string(unicode.ToUpper(rune(word[0]))) + strings.ToLower(word[1:])
+		capitalizedWords = append(capitalizedWords, capitalized)
+	}
+	
+	return strings.Join(capitalizedWords, "") // Join the words again into a string 
 }
